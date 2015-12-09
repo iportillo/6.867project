@@ -19,20 +19,20 @@ idx_test(idx(round(N_val_test*0.6) + 1:end)) = 1;
 
 Xtrain = HOG(idx_train,:); 
 Ytrain = Y(idx_train);
+Xtest = HOG(idx_test,:);
+Ytest = Y(idx_test);
+YCtest = 2*YC(idx_test,:) - 1;
 YCtrain = 2*YC(idx_train,:) - 1;
 
 Xval = HOG(idx_val,:);
 Yval = Y(idx_val);
 YCval = 2*YC(idx_val,:) - 1;
 
-Xtest = HOG(idx_test,:);
-Ytest = Y(idx_test);
-YCtest = 2*YC(idx_test,:) - 1;
 
 %% Fit the logistic model
 W = rand(size(Xtrain,2)+1,size(YCtrain,2))/10;
 [NLL, W, f_calls, iter] = GDLRMultiClass(Xtrain,YCtrain,Ytrain, W, 0.001, 1e-6);
-Y = predictLRMultiClass(Xtrain, W);
-er = sum(Ytrain==Y)/length(Ytrain);
+Y = predictLRMultiClass(Xtest, W);
+er = sum(Ytest==Y)/length(Ytest);
 save('LR_results', 'Ytrain', 'Xtrain', 'Xtest', 'Ytest', 'W','er');
-confusion_matrix(Ytrain, Y, [])
+im = confusion_matrix(Ytest, Y, []);

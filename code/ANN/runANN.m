@@ -35,13 +35,13 @@ parpool(2);
 %% Train and plot results
 i = 1; j = 1;
 N = [20 30 40 60 70 80];
-l = 1e-4;
+l = 1e-5;
 type = 'batch';
 parfor i = 1:length(N)
     tic;
     n = N(i);
-    sfunc = @(x) sigmoid(x);
-    [min, w, iter] = gradient_descent(type, n, Xtrain, YCtrain, sfunc, 1e-4, 0.0001, 1e-6);
+    sfunc = @(x) tanh(x);
+    [min, w, iter] = gradient_descent(type, n, Xtrain, YCtrain, sfunc, l, 0.00001, 1e-9);
 
     scoreFun = @(x) predict(x, Ytrain, n, w, sfunc);
 
@@ -66,7 +66,7 @@ parfor i = 1:length(N)
     fprintf('N %d l %1.0e Ev %1.2f Etest %1.2f\n', n, l, ev(i), etest(i) );
 end
 
-save('./code/ANN/results/ANN_N.mat','parameters', 'weights', 'time', 'ev', 'et', 'etest');
+save('./code/ANN/ANN_results.mat','parameters', 'weights', 'time', 'ev', 'et', 'etest', 'Ytrain', 'Xtrain', 'Ytest', 'Xtest');
 
 %% Plot results
 figure;

@@ -12,5 +12,5 @@ z1 = sfunc(a1);
 z1 = [ z1 ones(size(z1,1),1)];
 w2 = w{2};
 a2 = z1*w2;
-yk = sfunc(a2);
+yk = sigmoid(a2);
 end

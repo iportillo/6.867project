@@ -15,8 +15,8 @@ DE2 = zeros(N+1, K);
 [a1, z1, a2, yk] =fwd_prop(D, N, K, w, X, sfunc);
 
 w2 = w{2};
-d2 = (yk - Y)./(yk.*(1-yk)).*sfunc(a2).*(1-sfunc(a2));
-d1 = [(w2(1:end-1,:)*d2') .* (sfunc(a1).*(1-sfunc(a1)))']';
+d2 = (yk - Y)./(yk.*(1-yk)).*sigmoid(a2).*(1-sigmoid(a2));
+d1 = [(w2(1:end-1,:)*d2') .*(1-sfunc(a1).^2)']';
     
 DE1 = X'*d1;
 DE2 = z1'*d2;

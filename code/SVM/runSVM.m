@@ -48,3 +48,4 @@ for i = 1:length(C)
     er(i) = sum(Yt==Ytest)/length(Ytest)*100;
     fprintf('Accuracy for SVM with C %1.1e : %2.2f\n', c, er(i));
 end
+save('SVN_results', 'Ytrain', 'Xtrain', 'Xtest', 'Ytest', 'Yt','er', 'H');
