@@ -8,7 +8,8 @@ YC(Y==0,:) = [];
 Y(Y==0,:) = [];
 
 L = [0.1 0.3 0.5 0.7 0.8 0.85 0.9 0.95];
-for k = L
+for l = 1:length(L)
+    k = L(l);
     disp(k)
     %% Hold Out validation and test datasets
     N = size(HOG,1);
@@ -43,27 +44,31 @@ for k = L
         [ytrain,p] = predictQDA(Xtrain,g,b,mu,S, methods{i});
         [yval,p]   = predictQDA(Xval,g,b,mu,S, methods{i});
         [ytest,p]  = predictQDA(Xtest,g,b,mu,S, methods{i});
+        er(i,l) = sum(Ytest == ytest)/length(Ytest)*100;
 
-        fprintf('Accuracy %s: %2.3f \n', methods{i}, sum(Ytest == ytest)/length(Ytest)*100);
+        fprintf('Accuracy %s: %2.3f \n', methods{i}, er(i,l));
     end
 
     %% Train Regularized GDA
     methods = {'RLDA', 'RQDA'};
     lambda = linspace(0,1,21);
-    for i = 1:length(methods)
+    for i2 = 1:length(methods)
 
         for j = 1:length(lambda)
-            l = lambda(j);
-            [g,b,mu,S] = GDA(Xtrain, Ytrain, methods{i}, l);
-            [yval,p]   = predictQDA(Xval,g,b,mu,S, methods{i});
-            e_val(j) = sum(Yval == yval -1);
+            k = lambda(j);
+            [g,b,mu,S] = GDA(Xtrain, Ytrain, methods{i2}, k);
+            [yval,p]   = predictQDA(Xval,g,b,mu,S, methods{i2});
+            e_val(j) = sum(Yval == yval);
         end
 
         % Select lambda based on maximum accuracy in validation dataset
         idx = find(e_val==max(e_val));
-        l = lambda(idx(1));
-        [g,b,mu,S] = GDA(Xtrain, Ytrain, methods{i}, l);
-        [ytest,p]  = predictQDA(Xtest,g,b,mu,S, methods{i});
-        fprintf('Accuracy %s: %2.3f lambda: %1.2f \n', methods{i}, sum(Ytest == ytest)/length(Ytest)*100, l);
+        k = lambda(idx(1));
+        [g,b,mu,S] = GDA(Xtrain, Ytrain, methods{i2}, k);
+        [ytest,p]  = predictQDA(Xtest,g,b,mu,S, methods{i2});
+        fprintf('Accuracy %s: %2.3f lambda: %1.2f \n', methods{i2}, sum(Ytest == ytest)/length(Ytest)*100, k);
+        i = i + 1;
+        er(i,l) = sum(Ytest == ytest)/length(Ytest)*100;
     end
 end
+save('GDA_results', 'Ytrain', 'Xtrain', 'Xtest', 'Ytest', 'L','er');

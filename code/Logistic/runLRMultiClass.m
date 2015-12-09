@@ -1,6 +1,6 @@
 clear all
 close all
-
+clc
 load('./train_images/data.mat')
 
 %% Hold Out validation and test datasets
@@ -32,6 +32,7 @@ YCtest = 2*YC(idx_test,:) - 1;
 %% Fit the logistic model
 W = rand(size(Xtrain,2)+1,size(YCtrain,2))/10;
 [NLL, W, f_calls, iter] = GDLRMultiClass(Xtrain,YCtrain,Ytrain, W, 0.001, 1e-6);
-[Y,p] = predictSVMFast(Xtrain, W);
-sum(Ytrain==Y)/length(Ytrain)
+Y = predictLRMultiClass(Xtrain, W);
+er = sum(Ytrain==Y)/length(Ytrain);
+save('LR_results', 'Ytrain', 'Xtrain', 'Xtest', 'Ytest', 'W','er');
 confusion_matrix(Ytrain, Y, [])

@@ -42,10 +42,15 @@ function [g,b,mu,S] = GDA(X,Y, type, varargin)
         end
 
         % In case we have a diagonal LDA
-        if strcmp(type, 'DLDA')
+        if strcmp(type, 'DLDA') 
             E = diag(diag(E)');
         end
-
+        
+        if rcond(E) < 1e-20
+            l = 1e-10;
+            E = l*diag(diag(E)') + (1-l)*E ;
+        end
+        
         % Assign to every sigma matrix 
         for i = 1:k 
             S(:,:,i) = E;

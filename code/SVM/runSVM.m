@@ -44,6 +44,7 @@ for i = 1:length(C)
     end
     
     % Predict 
-    Yt = predictSVMFast(Xtest, squeeze(w(i,:,:)), w0(i,:));
-    fprintf('Accuracy for SVM with C %1.1e : %2.2f\n', c, sum(Yt==Ytest)/length(Ytest));
+    Yt(i,:) = predictSVMFast(Xtest, squeeze(w(i,:,:)), w0(i,:));
+    er(i) = sum(Yt==Ytest)/length(Ytest)*100;
+    fprintf('Accuracy for SVM with C %1.1e : %2.2f\n', c, er(i));
 end

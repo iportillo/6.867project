@@ -15,7 +15,7 @@ function [min, opt_point, f_calls, iter] = GDLRMultiClass(X, Y, Yt, initial_poin
         
         if isnan(f_1) || mod(iter, 25)==0
             disp(iter);
-            Y2 = predictSVMFast(X, point);
+            Y2 = predictLRMultiClass(X, point);
             sum(Yt==Y2)/length(Yt)
         end
         % Compute the values between consecutive optimizations
